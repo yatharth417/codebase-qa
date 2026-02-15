@@ -66,7 +66,7 @@ def check_service_status() -> Dict[str, bool]:
         groq_key = os.getenv('GROQ_API_KEY')
         if groq_key:
             llm = ChatGroq(
-                model="llama3-70b-8192", 
+                model="llama-3.3-70b-versatile", 
                 groq_api_key=groq_key
             )
             # Verify with actual inference call
@@ -77,12 +77,12 @@ def check_service_status() -> Dict[str, bool]:
         status['llm_error'] = str(e)
         print(f"LLM health check failed: {str(e)}")
     
-    # Check Embeddings - Use gemini-embedding-001 (3072 dimensions)
+    # Check Embeddings - Use embedding-001 (consistent throughout)
     try:
         google_key = os.getenv('GOOGLE_API_KEY')
         if google_key:
             embeddings = GoogleGenerativeAIEmbeddings(
-                model="models/gemini-embedding-001", 
+                model="models/embedding-001", 
                 google_api_key=google_key
             )
             status['embeddings'] = True
@@ -257,7 +257,7 @@ def index_codebase(source_path: Path) -> bool:
         
         # Create embeddings and vector store
         with st.spinner("Creating embeddings and indexing to Chroma..."):
-            # Use embedding-001
+            # Use embedding-001 (consistent throughout)
             embeddings = GoogleGenerativeAIEmbeddings(
                 model="models/embedding-001",
                 google_api_key=os.getenv('GOOGLE_API_KEY')
@@ -325,7 +325,7 @@ Please provide a clear and concise answer based on the code above."""
         
         # Get LLM response
         llm = ChatGroq(
-            model="llama3-70b-8192",
+            model="llama-3.3-70b-versatile",
             groq_api_key=os.getenv('GROQ_API_KEY'),
             temperature=0.3
         )
