@@ -1,0 +1,19 @@
+# Core Framework
+streamlit>=1.31.0
+
+# LLM and Orchestration
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-text-splitters>=0.3.0
+langchain-groq>=0.2.0
+langchain-google-genai>=2.0.0
+langchain-pinecone>=0.2.0
+
+# Vector Database
+pinecone>=5.0.0
+
+# Environment Variables
+python-dotenv>=1.0.0
+
+# Additional Dependencies
+google-generativeai>=0.8.0
