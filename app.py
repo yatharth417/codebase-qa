@@ -15,7 +15,6 @@ from dotenv import load_dotenv
 
 # LangChain imports
 from langchain_groq import ChatGroq
-import langchain_groq
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -23,7 +22,7 @@ from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 
 # Debug imports (temporary)
-import groq
+from importlib.metadata import version
 
 # Load environment variables
 load_dotenv()
@@ -381,8 +380,8 @@ def main():
         
         # Debug Info (temporary debug code)
         st.subheader("🐛 Debug Info")
-        st.caption(f"Groq SDK: {groq.__version__}")
-        st.caption(f"LangChain Groq: {langchain_groq.__version__}")
+        st.caption(f"Groq SDK: {version('groq')}")
+        st.caption(f"LangChain Groq: {version('langchain-groq')}")
         
         st.markdown("---")
         
