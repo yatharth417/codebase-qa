@@ -15,11 +15,15 @@ from dotenv import load_dotenv
 
 # LangChain imports
 from langchain_groq import ChatGroq
+import langchain_groq
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
+
+# Debug imports (temporary)
+import groq
 
 # Load environment variables
 load_dotenv()
@@ -372,6 +376,13 @@ def main():
             st.caption("Stored in: ./chroma_db")
         else:
             st.warning("⏳ No codebase indexed")
+        
+        st.markdown("---")
+        
+        # Debug Info (temporary debug code)
+        st.subheader("🐛 Debug Info")
+        st.caption(f"Groq SDK: {groq.__version__}")
+        st.caption(f"LangChain Groq: {langchain_groq.__version__}")
         
         st.markdown("---")
         
