@@ -4,7 +4,7 @@ A RAG-based web application that allows you to upload codebases (ZIP or GitHub) 
 
 ## 🚀 Live Demo
 
-**[Live App on Railway](https://your-railway-url.up.railway.app)** ← Replace with your actual Railway URL
+**[Live App on Railway](https://web-production-9a70b.up.railway.app/)** ← Replace with your actual Railway URL
 
 ## ✨ Features
 
