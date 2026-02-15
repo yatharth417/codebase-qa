@@ -77,12 +77,12 @@ def check_service_status() -> Dict[str, bool]:
         status['llm_error'] = str(e)
         print(f"LLM health check failed: {str(e)}")
     
-    # Check Embeddings - Use embedding-001 (consistent throughout)
+    # Check Embeddings - Use models/gemini-embedding-001
     try:
         google_key = os.getenv('GOOGLE_API_KEY')
         if google_key:
             embeddings = GoogleGenerativeAIEmbeddings(
-                model="models/embedding-001", 
+                model="models/gemini-embedding-001", 
                 google_api_key=google_key
             )
             status['embeddings'] = True
@@ -257,9 +257,9 @@ def index_codebase(source_path: Path) -> bool:
         
         # Create embeddings and vector store
         with st.spinner("Creating embeddings and indexing to Chroma..."):
-            # Use embedding-001 (consistent throughout)
+            # Use models/gemini-embedding-001
             embeddings = GoogleGenerativeAIEmbeddings(
-                model="models/embedding-001",
+                model="models/gemini-embedding-001",
                 google_api_key=os.getenv('GOOGLE_API_KEY')
             )
             

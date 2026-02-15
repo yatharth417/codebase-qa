@@ -88,7 +88,7 @@ def test_services():
         gemini_key = os.getenv('GOOGLE_API_KEY')
         if gemini_key:
             embeddings = GoogleGenerativeAIEmbeddings(
-                model="models/embedding-001",
+                model="text-embedding-004",
                 google_api_key=gemini_key
             )
             print("✅ Google Embeddings    Connected")
