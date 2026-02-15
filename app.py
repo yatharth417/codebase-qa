@@ -16,11 +16,10 @@ from dotenv import load_dotenv
 # LangChain imports
 from langchain_groq import ChatGroq
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_pinecone import PineconeVectorStore
+from langchain_community.vectorstores import Chroma
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
-from pinecone import Pinecone, ServerlessSpec
 
 # Load environment variables
 load_dotenv()
@@ -48,16 +47,15 @@ if 'vector_store' not in st.session_state:
     st.session_state.vector_store = None
 if 'indexed' not in st.session_state:
     st.session_state.indexed = False
-if 'index_name' not in st.session_state:
-    st.session_state.index_name = None
+if 'collection_name' not in st.session_state:
+    st.session_state.collection_name = "codebase_collection"
 
 
 def check_service_status() -> Dict[str, bool]:
     """Check the health status of all services"""
     status = {
         'llm': False,
-        'embeddings': False,
-        'database': False
+        'embeddings': False
     }
     
     # Check LLM
@@ -81,15 +79,6 @@ def check_service_status() -> Dict[str, bool]:
                 google_api_key=google_key
             )
             status['embeddings'] = True
-    except Exception:
-        pass
-    
-    # Check Pinecone
-    try:
-        pinecone_key = os.getenv('PINECONE_API_KEY')
-        if pinecone_key:
-            pc = Pinecone(api_key=pinecone_key)
-            status['database'] = True
     except Exception:
         pass
     
@@ -227,36 +216,8 @@ def load_and_split_documents(files: List[Path], base_path: Path) -> List[Documen
     return documents
 
 
-def create_or_get_pinecone_index(index_name: str) -> bool:
-    """Create or get existing Pinecone index"""
-    try:
-        pinecone_key = os.getenv('PINECONE_API_KEY')
-        pc = Pinecone(api_key=pinecone_key)
-        
-        # Check if index exists
-        existing_indexes = pc.list_indexes().names()
-        
-        if index_name not in existing_indexes:
-            # Create new index - 3072 dimensions for Google gemini-embedding-001
-            pc.create_index(
-                name=index_name,
-                dimension=3072,
-                metric='cosine',
-                spec=ServerlessSpec(
-                    cloud='aws',
-                    region='us-east-1'
-                )
-            )
-            st.info(f"Created new Pinecone index: {index_name}")
-        
-        return True
-    except Exception as e:
-        st.error(f"Error with Pinecone index: {str(e)}")
-        return False
-
-
-def index_codebase(source_path: Path, index_name: str) -> bool:
-    """Index the codebase into Pinecone"""
+def index_codebase(source_path: Path) -> bool:
+    """Index the codebase into Chroma"""
     try:
         # Check directory size
         dir_size = get_directory_size_mb(source_path)
@@ -287,27 +248,24 @@ def index_codebase(source_path: Path, index_name: str) -> bool:
         st.success(f"Created {len(documents)} document chunks")
         
         # Create embeddings and vector store
-        with st.spinner("Creating embeddings and indexing to Pinecone..."):
-            # Use gemini-embedding-001 (3072 dimensions)
+        with st.spinner("Creating embeddings and indexing to Chroma..."):
+            # Use embedding-001
             embeddings = GoogleGenerativeAIEmbeddings(
-                model="models/gemini-embedding-001",
+                model="models/embedding-001",
                 google_api_key=os.getenv('GOOGLE_API_KEY')
             )
             
-            # Create or get index
-            if not create_or_get_pinecone_index(index_name):
-                return False
-            
-            # Store in Pinecone
-            vector_store = PineconeVectorStore.from_documents(
+            # Create Chroma vector store with persistence
+            persist_directory = "./chroma_db"
+            vector_store = Chroma.from_documents(
                 documents=documents,
                 embedding=embeddings,
-                index_name=index_name
+                persist_directory=persist_directory,
+                collection_name=st.session_state.collection_name
             )
             
             st.session_state.vector_store = vector_store
             st.session_state.indexed = True
-            st.session_state.index_name = index_name
         
         st.success("✅ Codebase indexed successfully!")
         return True
@@ -386,9 +344,9 @@ def main():
         st.subheader("Service Status")
         status = check_service_status()
         
-        st.write("🤖 LLM (Gemini):", "🟢 Connected" if status['llm'] else "🔴 Disconnected")
-        st.write("📊 Embeddings:", "🟢 Connected" if status['embeddings'] else "🔴 Disconnected")
-        st.write("💾 Database (Pinecone):", "🟢 Connected" if status['database'] else "🔴 Disconnected")
+        st.write("🤖 LLM (Groq):", "🟢 Connected" if status['llm'] else "🔴 Disconnected")
+        st.write("📊 Embeddings (Gemini):", "🟢 Connected" if status['embeddings'] else "🔴 Disconnected")
+        st.write("💾 Vector DB:", "🟢 Chroma (Local)" if st.session_state.indexed else "⚪ Not Indexed")
         
         st.markdown("---")
         
@@ -396,8 +354,8 @@ def main():
         st.subheader("Indexing Status")
         if st.session_state.indexed:
             st.success("✅ Codebase Indexed")
-            if st.session_state.index_name:
-                st.info(f"Index: {st.session_state.index_name}")
+            st.info(f"Collection: {st.session_state.collection_name}")
+            st.caption("Stored in: ./chroma_db")
         else:
             st.warning("⏳ No codebase indexed")
         
@@ -421,9 +379,10 @@ def main():
         st.error("⚠️ GOOGLE_API_KEY not found in environment variables!")
         st.stop()
     
-    if not os.getenv('PINECONE_API_KEY'):
-        st.error("⚠️ PINECONE_API_KEY not found in environment variables!")
+    if not os.getenv('GROQ_API_KEY'):
+        st.error("⚠️ GROQ_API_KEY not found in environment variables!")
         st.stop()
+    
     
     # Tabs for different sections
     tab1, tab2 = st.tabs(["📤 Upload & Index", "💬 Ask Questions"])
@@ -454,8 +413,7 @@ def main():
                                 source_path = extract_path
                             
                             # Index
-                            index_name = "codebase-qa-index"
-                            index_codebase(source_path, index_name)
+                            index_codebase(source_path)
         
         with col2:
             st.subheader("Option 2: GitHub URL")
@@ -471,8 +429,7 @@ def main():
                         # Clone
                         if clone_github_repo(github_url, clone_path):
                             # Index
-                            index_name = "codebase-qa-index"
-                            index_codebase(clone_path, index_name)
+                            index_codebase(clone_path)
     
     with tab2:
         st.header("Ask Questions")
