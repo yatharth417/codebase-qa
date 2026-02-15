@@ -2,51 +2,31 @@
 
 ## 👤 Developer Information
 
-**Name:** [Your Name Here]
-
-**Role:** [Your Role/Title]
-
-**Location:** [Your Location]
+**Name:** [Yatharth Soni]
 
 ## 🔗 Connect With Me
 
-- **LinkedIn:** [Your LinkedIn URL]
-- **GitHub:** [Your GitHub Profile]
-- **Portfolio:** [Your Portfolio Website]
-- **Email:** [Your Email]
+- **LinkedIn:** [https://www.linkedin.com/in/yatharth-soni-bbb55224a/]
+- **GitHub:** [https://github.com/yatharth417]
+- **Email:** [soniyatharth2004@gmail.com]
 
 ## 💼 Professional Summary
 
-[Add your professional summary here - 2-3 sentences about your background, expertise, and interests]
+[Computer Science undergraduate with hands-on experience building full-stack web applications. Comfortable working across React-based frontends, Node/FastAPI backends, and relational and NoSQL databases.
+Have built production-style projects involving authentication, RBAC, AI-based document processing, and
+ML model evaluation. Seeking challenging role in a growth-oriented organization.]
 
 ## 🛠️ Skills
 
-- **Languages:** [e.g., Python, JavaScript, TypeScript, etc.]
-- **Frameworks:** [e.g., React, Node.js, Django, etc.]
-- **AI/ML:** [e.g., LangChain, TensorFlow, PyTorch, etc.]
-- **Cloud:** [e.g., AWS, GCP, Azure, etc.]
-- **Other:** [e.g., Docker, Kubernetes, CI/CD, etc.]
-
-## 🎓 Education
-
-**[Degree]** in **[Field]**  
-[University Name] - [Year]
-
-## 🌟 Featured Projects
-
-1. **[Project Name]**
-   - Description: [Brief description]
-   - Tech Stack: [Technologies used]
-   - Link: [Project URL]
-
-2. **[Project Name]**
-   - Description: [Brief description]
-   - Tech Stack: [Technologies used]
-   - Link: [Project URL]
+- **Languages:** [Python, C++, JavaScript/Typescript]
+- **Frameworks:** [Node.js, Express.js, FastAPI,  React, Redux, Tailwind,]
+- **Databases:** [ MySQL, MongoDB]
+- **Cloud:** [AWS, Ollama]
+- **Other:** [Git, Postman, JWT Auth]
 
 ## 📄 Resume
 
-**Download Resume:** [Link to your resume PDF]
+**Download Resume:** [https://drive.google.com/drive/u/0/folders/1g52yQoa0SsodUopSSNOfrctdprU6uBBY]
 
 ## 📫 Let's Connect!
 
@@ -54,6 +34,4 @@ I'm always interested in collaborating on interesting projects or discussing new
 
 ---
 
-**This project (Codebase Q&A) was built as part of:** [Context: Hackathon/Assignment/Personal Project]  
-**Completion Time:** 48 hours  
-**Status:** ✅ Production Ready
+

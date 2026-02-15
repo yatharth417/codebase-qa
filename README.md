@@ -1,42 +1,63 @@
-# 🔍 Codebase Q&A with Proof
+# Codebase Q&A with Proof
 
-A RAG-powered web application that lets you upload a codebase and ask questions about it. Get answers with file paths, line references, and actual code snippets as proof.
+A RAG-based web application that allows you to upload codebases (ZIP or GitHub) and ask questions about them. Get intelligent answers with source attribution - every answer includes file paths and actual code snippets as proof.
 
-## 🌟 Features
+## 🚀 Live Demo
 
-- **Upload Options**: Upload ZIP files or provide GitHub repository URLs
-- **Smart Indexing**: Automatic code parsing, chunking, and vector storage
-- **Intelligent Q&A**: Ask questions and get context-aware answers
-- **Source Attribution**: Every answer includes file paths and code snippets
-- **Chat History**: Last 10 Q&A pairs saved in session
-- **Health Monitoring**: Real-time status of LLM, Embeddings, and Database
-- **Safety Limits**: 
-  - Max codebase size: 100MB
-  - Max files: 1000
-  - Max individual file size: 1MB
+**[Live App on Railway](https://your-railway-url.up.railway.app)** ← Replace with your actual Railway URL
 
-## 🛠️ Tech Stack
+## ✨ Features
 
-- **Frontend/Backend**: Streamlit
-- **LLM**: Google Gemini Pro (via langchain-google-genai)
-- **Vector Database**: Pinecone (serverless)
+- **Multiple Upload Options**: Upload ZIP files or clone from GitHub URLs
+- **Smart Code Indexing**: Automatic parsing, chunking, and vector storage
+- **Intelligent Q&A**: Ask natural language questions about your codebase
+- **Source Attribution**: Every answer includes file paths and code snippets as proof
+- **Service Health Monitoring**: Real-time status of LLM, Embeddings, and Vector Database
+- **Chat History**: Saves last 10 Q&A pairs in session
+- **Multi-Language Support**: Python, JavaScript, TypeScript, Java, C++, Go, Rust, PHP, and more
+
+## 🏗️ Tech Stack
+
+- **Frontend**: Streamlit
+- **LLM**: Groq (Llama 3.3 70B Versatile)
+- **Embeddings**: Google Generative AI (models/gemini-embedding-001)
+- **Vector Database**: Chroma (local persistence)
 - **Orchestration**: LangChain
-- **Embeddings**: Google Generative AI Embeddings (768 dimensions)
+- **Text Processing**: RecursiveCharacterTextSplitter
 
-## 📋 Prerequisites
+## 🎯 Why These Technologies?
 
-1. **Python 3.9+**
-2. **Google Gemini API Key**: [Get it here](https://makersuite.google.com/app/apikey)
-3. **Pinecone API Key**: [Get it here](https://app.pinecone.io/)
-4. **Git** (for GitHub repository cloning)
+### Groq (LLM)
+- ⚡ **Speed**: ~300 tokens/sec inference
+- 💰 **Cost**: Free tier with 14,400 requests/day
+- 🎯 **Quality**: Llama 3.3 70B excellent for code understanding
+- 🔒 **Reliability**: Stable API with good uptime
 
-## 🚀 Quick Start
+### Google Generative AI (Embeddings)
+- 🎯 **Quality**: 768-dimensional embeddings
+- 💰 **Cost**: Free tier with 1500 requests/day
+- 🔗 **Integration**: Native LangChain support
+
+### Chroma (Vector DB)
+- 🚀 **Simplicity**: No external service needed
+- 💾 **Persistence**: Local file storage
+- 🔗 **Compatibility**: Built-in LangChain integration
+- 💰 **Cost**: Completely free
+
+## 📋 Requirements
+
+- Python 3.11
+- API Keys:
+  - [Groq API Key](https://console.groq.com/keys)
+  - [Google API Key](https://aistudio.google.com/apikey)
+
+## 🛠️ Local Setup
 
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
-cd codebase-qa-app
+git clone https://github.com/yatharth417/codebase-qa.git
+cd codebase-qa
 ```
 
 ### 2. Install Dependencies
@@ -45,19 +66,13 @@ cd codebase-qa-app
 pip install -r requirements.txt
 ```
 
-### 3. Set Up Environment Variables
+### 3. Configure Environment Variables
 
 Create a `.env` file in the root directory:
 
-```bash
-cp .env.example .env
 ```
-
-Edit `.env` and add your API keys:
-
-```env
+GROQ_API_KEY=your_groq_api_key_here
 GOOGLE_API_KEY=your_google_api_key_here
-PINECONE_API_KEY=your_pinecone_api_key_here
 ```
 
 ### 4. Run the Application
@@ -66,170 +81,132 @@ PINECONE_API_KEY=your_pinecone_api_key_here
 streamlit run app.py
 ```
 
-The app will open in your browser at `http://localhost:8501`
+The app will open at `http://localhost:8501`
 
 ## 📖 How to Use
 
-### Step 1: Index Your Codebase
+### Step 1: Check Service Status
+Open the app and verify all services show 🟢 Connected in the sidebar:
+- LLM (Groq)
+- Embeddings (Google Gemini)
+- Vector DB (Chroma)
 
-1. Go to the **"Upload & Index"** tab
-2. Choose one of two options:
-   - **Upload ZIP**: Select a ZIP file containing your code
-   - **GitHub URL**: Paste a GitHub repository URL
-3. Click the **"Index"** button
-4. Wait for the indexing process to complete (you'll see progress indicators)
+### Step 2: Upload & Index Your Codebase
 
-### Step 2: Ask Questions
+**Option A: Upload ZIP**
+1. Navigate to "Upload & Index" tab
+2. Choose a ZIP file (max 100MB)
+3. Click "Index from ZIP"
+4. Wait for indexing to complete
 
-1. Go to the **"Ask Questions"** tab
+**Option B: GitHub URL**
+1. Navigate to "Upload & Index" tab
+2. Enter GitHub repository URL
+3. Click "Index from GitHub"
+4. Wait for cloning and indexing
+
+### Step 3: Ask Questions
+
+1. Go to "Ask Questions" tab
 2. Type your question in the chat input
-3. View the answer along with:
-   - Direct answer from the AI
-   - Source files used
-   - Actual code snippets
+3. View answer with source attribution
+4. Expand "View sources" to see actual code snippets
 
-### Example Questions
+## 💬 Example Questions
 
-- "What does the authentication system do?"
-- "How is error handling implemented?"
-- "Explain the database connection setup"
-- "What API endpoints are available?"
-- "Show me how the payment processing works"
-
-## 🎯 Supported File Types
-
-- Python (`.py`)
-- JavaScript (`.js`, `.jsx`)
-- TypeScript (`.ts`, `.tsx`)
-- Java (`.java`)
-- C/C++ (`.c`, `.cpp`, `.h`)
-- C# (`.cs`)
-- Ruby (`.rb`)
-- Go (`.go`)
-- Rust (`.rs`)
-- PHP (`.php`)
-- Markdown (`.md`)
-- Text (`.txt`)
-- JSON (`.json`)
-- YAML (`.yaml`, `.yml`)
-
-## 🚫 Ignored Directories
-
-The following directories are automatically skipped:
-- `node_modules`
-- `.git`
-- `__pycache__`
-- `venv`
-- `env`
-- `.next`
-- `dist`
-- `build`
-
-## 🌐 Deployment
-
-### Deploy to Render
-
-1. **Create a Render account**: [render.com](https://render.com)
-
-2. **Create a new Web Service**:
-   - Connect your GitHub repository
-   - Set build command: `pip install -r requirements.txt`
-   - Set start command: `streamlit run app.py --server.port=$PORT --server.address=0.0.0.0`
-
-3. **Add Environment Variables**:
-   - `GOOGLE_API_KEY`: Your Google Gemini API key
-   - `PINECONE_API_KEY`: Your Pinecone API key
-
-4. **Deploy**: Click "Create Web Service"
-
-### Deploy to Railway
-
-1. **Create a Railway account**: [railway.app](https://railway.app)
-
-2. **New Project from GitHub**:
-   - Connect your repository
-   - Railway auto-detects Python and Streamlit
-
-3. **Add Environment Variables** in the Variables tab:
-   - `GOOGLE_API_KEY`
-   - `PINECONE_API_KEY`
-
-4. **Custom Start Command** (if needed):
-   ```
-   streamlit run app.py --server.port=$PORT --server.address=0.0.0.0
-   ```
-
-### Deploy to Streamlit Community Cloud
-
-1. **Push to GitHub**
-2. **Go to**: [share.streamlit.io](https://share.streamlit.io)
-3. **Deploy**: Select your repository
-4. **Add Secrets** in Advanced Settings:
-   ```toml
-   GOOGLE_API_KEY = "your_key"
-   PINECONE_API_KEY = "your_key"
-   ```
+```
+"Where is authentication handled?"
+"How do retries work in this codebase?"
+"Explain the database connection logic"
+"What API endpoints are defined?"
+"Show me the error handling implementation"
+"How is user data validated?"
+"Where are environment variables used?"
+```
 
 ## 🔧 Configuration
 
-You can adjust limits in `app.py`:
+### Limits (configured in `app.py`)
 
 ```python
-MAX_CODEBASE_SIZE_MB = 100  # Maximum codebase size
-MAX_FILES = 1000             # Maximum number of files
-MAX_FILE_SIZE_MB = 1         # Maximum individual file size
+MAX_CODEBASE_SIZE_MB = 100   # Maximum codebase size
+MAX_FILES = 50                # Maximum files to index
+MAX_FILE_SIZE_MB = 0.5        # Maximum individual file size
 ```
 
-## 🐛 Troubleshooting
+### Supported File Types
 
-### "GOOGLE_API_KEY not found"
-- Ensure `.env` file exists with the correct key
-- For deployment, add as environment variable in platform settings
+`.py`, `.js`, `.jsx`, `.ts`, `.tsx`, `.java`, `.cpp`, `.c`, `.h`, `.cs`, `.rb`, `.go`, `.rs`, `.php`, `.md`, `.txt`, `.json`, `.yaml`, `.yml`
 
-### "Git clone failed"
-- Check if the repository is public
-- Verify the URL is correct
-- Large repositories may timeout (5-minute limit)
+### Ignored Directories
 
-### "No supported code files found"
-- Check if your codebase contains supported file types
-- Verify files aren't in ignored directories
+`node_modules`, `.git`, `__pycache__`, `venv`, `env`, `.next`, `dist`, `build`
 
-### "Codebase too large"
-- Reduce the size below 100MB
-- Or increase `MAX_CODEBASE_SIZE_MB` in `app.py`
+## 🏆 Features Implemented
 
-## 📝 Project Structure
+✅ ZIP file upload  
+✅ GitHub repository cloning  
+✅ Automatic code indexing with progress tracking  
+✅ RAG-based Q&A with source retrieval  
+✅ Source attribution (file paths + code snippets)  
+✅ Real-time service health monitoring  
+✅ Session-based chat history (last 10 Q&As)  
+✅ Multi-language code support (15+ languages)  
+✅ Error handling for edge cases  
+✅ File size and count limits  
+
+## 📁 Project Structure
 
 ```
-codebase-qa-app/
-├── app.py                 # Main Streamlit application
-├── requirements.txt       # Python dependencies
-├── .env.example          # Environment variables template
-├── .env                  # Your API keys (not committed)
-├── README.md             # This file
-├── AI_NOTES.md           # AI development notes
+codebase-qa/
+├── app.py                   # Main Streamlit application
+├── requirements.txt         # Python dependencies
+├── runtime.txt             # Python version specification
+├── Procfile                # Deployment configuration
+├── railway.json            # Railway-specific settings
+├── .env                    # Environment variables (not committed)
+├── .gitignore             # Git ignore rules
+├── chroma_db/             # Vector database storage
+├── README.md              # This file
+├── AI_NOTES.md           # AI development documentation
 ├── ABOUTME.md            # Developer information
-└── PROMPTS_USED.md       # Prompts used in development
+└── PROMPTS_USED.md       # Development prompts log
 ```
 
-## 🤝 Contributing
+## 🔒 Security
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+- ✅ No API keys in code
+- ✅ `.env` file excluded from git
+- ✅ Input validation for uploads
+- ✅ File type restrictions
+- ✅ Size limits enforced
 
-## 📄 License
+## 🧪 Testing
 
-This project is open source and available under the MIT License.
+Tested scenarios:
+- ✅ ZIP upload with various codebases
+- ✅ GitHub cloning with public repositories
+- ✅ Q&A with different question types
+- ✅ Source snippet display accuracy
+- ✅ Service health indicators
+- ✅ Error handling for invalid inputs
 
 ## 🙏 Acknowledgments
 
 - Built with [Streamlit](https://streamlit.io/)
-- Powered by [Google Gemini](https://deepmind.google/technologies/gemini/)
-- Vector storage by [Pinecone](https://www.pinecone.io/)
+- Powered by [Groq](https://groq.com/)
+- Embeddings by [Google Generative AI](https://ai.google.dev/)
+- Vector storage by [Chroma](https://www.trychroma.com/)
 - Orchestrated with [LangChain](https://www.langchain.com/)
 
-## 📧 Support
+## 👤 Developer
 
-For questions or issues, please open an issue on GitHub or contact the developer.
+See [ABOUTME.md](ABOUTME.md) for developer information.
+
+## 📄 License
+
+MIT License
 
 ---
+
+**Built as part of a technical assessment - February 2026**
