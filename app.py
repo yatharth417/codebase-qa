@@ -71,6 +71,7 @@ def check_service_status() -> Dict[str, bool]:
             if response and response.content:
                 status['llm'] = True
     except Exception as e:
+        status['llm_error'] = str(e)
         print(f"LLM health check failed: {str(e)}")
     
     # Check Embeddings - Use gemini-embedding-001 (3072 dimensions)
@@ -82,7 +83,8 @@ def check_service_status() -> Dict[str, bool]:
                 google_api_key=google_key
             )
             status['embeddings'] = True
-    except Exception:
+    except Exception as e:
+        status['embeddings_error'] = str(e)
         pass
     
     return status
@@ -347,8 +349,17 @@ def main():
         st.subheader("Service Status")
         status = check_service_status()
         
+        # LLM Status
         st.write("🤖 LLM (Groq):", "🟢 Connected" if status['llm'] else "🔴 Disconnected")
+        if not status['llm'] and 'llm_error' in status:
+            st.caption(f"Error: {status['llm_error']}")
+        
+        # Embeddings Status
         st.write("📊 Embeddings (Gemini):", "🟢 Connected" if status['embeddings'] else "🔴 Disconnected")
+        if not status['embeddings'] and 'embeddings_error' in status:
+            st.caption(f"Error: {status['embeddings_error']}")
+        
+        # Vector DB Status
         st.write("💾 Vector DB:", "🟢 Chroma (Local)" if st.session_state.indexed else "⚪ Not Indexed")
         
         st.markdown("---")
