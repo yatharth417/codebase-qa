@@ -58,17 +58,20 @@ def check_service_status() -> Dict[str, bool]:
         'embeddings': False
     }
     
-    # Check LLM
+    # Check LLM - Verify Groq connectivity with actual inference
     try:
         groq_key = os.getenv('GROQ_API_KEY')
         if groq_key:
             llm = ChatGroq(
-                model="llama-3.3-70b-versatile", 
+                model="llama3-70b-8192", 
                 groq_api_key=groq_key
             )
-            status['llm'] = True
-    except Exception:
-        pass
+            # Verify with actual inference call
+            response = llm.invoke("Reply with OK")
+            if response and response.content:
+                status['llm'] = True
+    except Exception as e:
+        print(f"LLM health check failed: {str(e)}")
     
     # Check Embeddings - Use gemini-embedding-001 (3072 dimensions)
     try:
@@ -317,7 +320,7 @@ Please provide a clear and concise answer based on the code above."""
         
         # Get LLM response
         llm = ChatGroq(
-            model="llama-3.3-70b-versatile",
+            model="llama3-70b-8192",
             groq_api_key=os.getenv('GROQ_API_KEY'),
             temperature=0.3
         )
